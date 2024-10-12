@@ -51,3 +51,50 @@ The goal of this project is to see if we always get the expected behavior, regar
 * We can use a relative import: `from ..models.myenum import MyEnum`
 
 
+## Altering the `sys.path`.
+
+See the documentation for [sys.path](https://docs.python.org/3/library/sys.html#sys.path).
+
+By default, when running `python -m myapp.callerpackage.caller`, python looks in the current working directory when resolving absolute imports.
+
+We add this line to the `myapp` (root package) `__init__.py`:
+```python
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+```
+
+This adds `myapp` to the module search path. This means that python will look for modules in absolute impots:
+* In the current working directory from which we launch `python -m` (the `enumimport` folder -- the root folder of this project).
+* In the `myapp` directory.
+
+This means we have a few options when importing `myenum` from `callee` or `caller`:
+```python
+from myapp.models.myenum import MyEnum
+from ..models.myenum import MyEnum
+from models.myenum import MyEnum
+```
+
+The first two resolve to the same module object.
+The third resolves to a different module object.
+
+If we don't use consistent imports, we may end up printing "didn't get a cat".
+
+If, for example:
+* `callee` imports: `from myapp.models.myenum import MyEnum`
+* `caller` imports: `from models.myenum import MyEnum`
+
+We will see "didn't get a cat".
+
+
+### Compatible imports
+
+Here are different variations of imports between the `caller` and `callee` modules, of the `MyEnum` class.
+
+We see that if we take advantage of the modified `sys.path`, we must do it from both `caller` and `callee`, to import the same `myenum` module.
+
+| caller import                            | callee import                            | output              |
+| ---------------------------------------- | ---------------------------------------- | ------------------- |
+| `from myapp.models.myenum import MyEnum` | `from myapp.models.myenum import MyEnum` | ✅ got a cat        |
+| `from myapp.models.myenum import MyEnum` | `from ..models.myenum import MyEnum`     | ✅ got a cat        |
+| `from models.myenum import MyEnum`       | `from models.myenum import MyEnum`       | ✅ got a cat        |
+| `from myapp.models.myenum import MyEnum` | `from models.myenum import MyEnum`       | ❌ didn't get a cat |
+| `from ..models.myenum import MyEnum`     | `from models.myenum import MyEnum`       | ❌ didn't get a cat |
