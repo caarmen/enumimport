@@ -13,22 +13,22 @@ def entry_point():
 if __name__ == "__main__":
     entry_point()
 
-    from myapp.models.myenum import MyEnum as AbsoluteEnum
-    from ..models.myenum import MyEnum as RelativeToRootEnum
-    from models.myenum import MyEnum as DifferentSysPathAbsoluteEnum
+    from myapp.models import myenum as absolute_enum
+    from ..models import myenum as relative_enum
+    from models import myenum as modified_sys_path_enum
 
-    print(AbsoluteEnum.__module__)  # myapp.models.enum
-    print(RelativeToRootEnum.__module__)  # myapp.models.myenum
-    print(DifferentSysPathAbsoluteEnum.__module__)  # models.myenum
+    print(absolute_enum)  # myapp.models.enum
+    print(relative_enum)  # myapp.models.myenum
+    print(modified_sys_path_enum)  # models.myenum
 
     print(
-        "AbsoluteEnum.__module__ == RelativeToRootEnum.__module__: {}".format(
-            (AbsoluteEnum.__module__ == RelativeToRootEnum.__module__)
+        "absolute_enum == relative_enum {}".format(
+            (absolute_enum == relative_enum)
         )
     )
 
     print(
-        "AbsoluteEnum.__module__ == DifferentSysPathAbsoluteEnum.__module__: {}".format(
-            (AbsoluteEnum.__module__ == DifferentSysPathAbsoluteEnum.__module__)
+        "absolute_enum == modified_sys_path_enum: {}".format(
+            (absolute_enum == modified_sys_path_enum)
         )
     )

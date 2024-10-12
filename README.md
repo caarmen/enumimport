@@ -84,6 +84,64 @@ If, for example:
 
 We will see "didn't get a cat".
 
+### What's being imported?
+
+Here's what's actually imported, when `caller` or `callee` imports the `myenum` package, depending on the enum syntax used:
+
+<table>
+<tr><td>code</td><td>output</td></tr>
+<tr>
+<td>
+
+```python
+from myapp.models import myenum
+print(myenum)
+```
+
+</td>
+<td>
+
+```
+<module 'myapp.models.myenum' from '/path/to/enumimport/myapp/models/myenum.py'>
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```python
+from ..models import myenum
+print(myenum)
+```
+
+</td>
+<td>
+
+```
+<module 'myapp.models.myenum' from '/path/to/enumimport/myapp/models/myenum.py'>
+```
+
+</td>
+</tr>
+<tr>
+<td>
+
+```python
+from models import myenum
+print(myenum)
+```
+
+</td>
+<td>
+
+```
+<module 'models.myenum' from '/path/to/enumimport/myapp/models/myenum.py'>
+```
+
+</td>
+</tr>
+</table>
 
 ### Compatible imports
 
